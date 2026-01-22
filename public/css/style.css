@@ -747,3 +747,52 @@ ul li {
 .testimonial-author span {
   opacity: 0.85;
 }
+
+
+
+/* Navbar auth area */
+.nav-auth{
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+/* Buttons */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:10px 16px;
+  border-radius:999px;
+  font-size:14px;
+  font-weight:600;
+  text-decoration:none;
+  border:1px solid transparent;
+  transition:transform .15s ease, background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+
+.btn:hover{ transform:translateY(-1px); }
+.btn:active{ transform:translateY(0px); }
+
+/* Primary admin button */
+.btn-admin{
+  background:#38bdf8;       /* sky */
+  color:#0b1220;            /* deep text */
+  border-color:transparent;
+  box-shadow:0 8px 20px rgba(56,189,248,.18);
+}
+.btn-admin:hover{
+  background:#7dd3fc;
+}
+
+/* Subtle ghost button */
+.btn-ghost{
+  background:transparent;
+  color:#e5e7eb;            /* light text */
+  border-color:rgba(255,255,255,.18);
+}
+.btn-ghost:hover{
+  background:rgba(255,255,255,.08);
+  border-color:rgba(255,255,255,.28);
+}

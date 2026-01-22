@@ -23,5 +23,7 @@ class EnsureAdmin
         abort_unless($isAdmin, 403);
 
         return $next($request);
+
+        
     }
 }

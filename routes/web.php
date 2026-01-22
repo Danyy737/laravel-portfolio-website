@@ -19,8 +19,16 @@ Route::post('/contact', [PortfolioController::class, 'contact'])->name('contact.
 
 // Breeze dashboard (logged-in user dashboard)
 Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    $user = auth()->user();
+
+    // Admins go to CMS
+    if ($user && ($user->email === 'mouradany2004@gmail.com' || (bool) $user->is_admin)) {
+        return redirect()->route('admin.dashboard');
+    }
+
+    // Everyone else goes home (or wherever you want)
+    return redirect()->route('home');
+})->middleware(['auth'])->name('dashboard');
 
 // Profile routes (Breeze)
 Route::middleware('auth')->group(function () {
