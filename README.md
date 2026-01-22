@@ -9,6 +9,17 @@ A personal portfolio website built with Laravel featuring a custom admin CMS.
 - Public-facing portfolio pages
 - Relational database design using Eloquent
 
+  ## Screenshots
+
+### Public Portfolio
+![Projects Page](projectspage.png)
+
+### Admin – Projects CMS
+![Admin Projects](adminpanelprojects.png)
+
+### Admin – Testimonials CMS
+![Admin Testimonials](adminpaneltestimonials.png)
+
 ## Tech Stack
 - Laravel
 - PHP
