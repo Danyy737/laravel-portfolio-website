@@ -4,13 +4,13 @@
 <h2 class="page-title">Contact</h2>
 <p class="page-subtitle">Feel free to reach out — I’ll reply as soon as I can.</p>
 
-<!-- @if(session('success'))
+@if(session('success'))
     <div class="success-message fade-in">
         {{ session('success') }}
     </div>
-@endif -->
+@endif
 
-<form action="/contact" method="POST" class="contact-form">
+<form action="{{ route('contact.submit') }}" method="POST" class="contact-form">
     @csrf
 
     <div class="field">
@@ -30,6 +30,7 @@
 
     <button type="submit" id="submitBtn">Send message</button>
 </form>
+
 <script>
     const form = document.querySelector('form');
     const button = document.getElementById('submitBtn');
@@ -40,9 +41,3 @@
     });
 </script>
 @endsection
-
-@if(session('success'))
-    <div class="success-message fade-in">
-        {{ session('success') }}
-    </div>
-@endif
