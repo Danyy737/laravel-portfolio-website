@@ -19,24 +19,44 @@
                 Admin Panel
             </div>
 
-            <nav class="flex-1 p-4 space-y-2">
-                <a href="{{ route('admin.projects.index') }}"
-                   class="block px-4 py-2 rounded transition hover:bg-gray-800">
-                    Dashboard
-                </a>
+         <nav class="flex-1 p-4 space-y-2">
 
-                <div class="p-4 border-t border-gray-800">
+    @php
+        $dashboardActive = request()->routeIs('admin.dashboard');
+        $projectsActive = request()->routeIs('admin.projects.*');
+        $testimonialsActive = request()->routeIs('admin.testimonials.*');
+
+        $base = 'block px-4 py-2 rounded transition';
+        $inactive = 'hover:bg-gray-800 text-gray-200';
+        $active = 'bg-gray-800 text-white font-semibold';
+    @endphp
+
+    <a href="{{ route('admin.dashboard') }}"
+       class="{{ $base }} {{ $dashboardActive ? $active : $inactive }}">
+        Dashboard
+    </a>
+
+    <a href="{{ route('admin.projects.index') }}"
+       class="{{ $base }} {{ $projectsActive ? $active : $inactive }}">
+        Projects
+    </a>
+
+    <a href="{{ route('admin.testimonials.index') }}"
+       class="{{ $base }} {{ $testimonialsActive ? $active : $inactive }}">
+        Testimonials
+    </a>
+
+</nav>
+<div class="p-4 border-t border-gray-800">
     <form method="POST" action="{{ route('logout') }}">
         @csrf
-        <button
-            type="submit"
-            class="w-full text-left px-4 py-2 rounded text-red-400 hover:bg-gray-800 hover:text-red-300 transition"
-        >
+        <button type="submit"
+            class="w-full text-left px-4 py-2 rounded text-red-400 hover:bg-gray-800 hover:text-red-300 transition">
             Logout
         </button>
     </form>
 </div>
-            </nav>
+
 
             <div class="p-4 border-t border-gray-800">
                 <a href="{{ url('/') }}" class="text-sm text-gray-300 hover:text-white">
