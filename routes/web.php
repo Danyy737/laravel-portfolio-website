@@ -30,7 +30,8 @@ Route::middleware('auth')->group(function () {
 });
 
 // Admin CMS routes
-Route::middleware(['auth'])
+// Admin CMS routes (admin-only)
+Route::middleware(['admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
@@ -43,6 +44,6 @@ Route::middleware(['auth'])
         // Admin resources
         Route::resource('projects', ProjectController::class)->except(['show']);
         Route::resource('testimonials', TestimonialController::class)->except(['show']);
-    });
 
+    });
 require __DIR__.'/auth.php';
