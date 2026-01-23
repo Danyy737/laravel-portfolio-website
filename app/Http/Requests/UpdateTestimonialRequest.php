@@ -11,13 +11,13 @@ class UpdateTestimonialRequest extends FormRequest
         return true;
     }
 
-    public function rules(): array
-    {
-        return [
-            'project_id' => ['required', 'integer', 'exists:projects,id'],
-            'author_name' => ['required', 'string', 'max:255'],
-            'content' => ['required', 'string', 'max:2000'],
-            'rating' => ['nullable', 'integer', 'between:1,5'],
-        ];
-    }
+public function rules(): array
+{
+    return [
+        'project_id'   => ['required', 'integer', 'exists:projects,id'],
+        'author_name'  => ['required', 'string', 'max:255'],
+        'author_role'  => ['nullable', 'string', 'max:255'],
+        'quote'        => ['required', 'string', 'max:2000'],
+    ];
+}
 }
