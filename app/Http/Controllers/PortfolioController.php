@@ -6,6 +6,7 @@ use App\Models\Project;
 use Illuminate\Http\Request;
 use App\Mail\ContactFormMail;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Requests\ContactRequest;
 
 class PortfolioController extends Controller
 {
@@ -28,23 +29,19 @@ class PortfolioController extends Controller
     return view('projects', compact('projects'));
 }
 
-    public function contact(Request $request)
-    {
-        if ($request->isMethod('post')) {
-            $validated = $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|email',
-                'message' => 'required|string',
-            ]);
+public function contact(ContactRequest $request)
+{
+    if ($request->isMethod('post')) {
+        $validated = $request->validated();
 
-            Mail::to('mouradany2004@gmail.com')
-                ->send(new ContactFormMail($validated));
+        Mail::to('mouradany2004@gmail.com')
+            ->send(new ContactFormMail($validated));
 
-            return redirect()
-                ->route('contact')
-                ->with('success', 'Your message has been sent!');
-        }
-
-        return view('contact');
+        return redirect()
+            ->route('contact')
+            ->with('success', 'Message sent successfully!');
     }
+
+    return view('contact');
+}
 }
