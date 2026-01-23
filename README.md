@@ -35,6 +35,7 @@ cp .env.example .env
 php artisan key:generate
 php artisan migrate
 php artisan serve
+```
 
 ## Security & Validation
 
@@ -48,3 +49,8 @@ This project uses multiple layers of protection for admin and public endpoints:
   - Validation failures redirect back with errors and preserve old input for a good UX.
 
 This keeps controllers clean, improves data integrity, and makes future API endpoints safer by reusing the same validation rules.
+
+
+
+
+
