@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Project;
-use Illuminate\Http\Request;   // ✅ ADD THIS LINE
+use Illuminate\Http\Request;
+use App\Http\Requests\StoreProjectRequest;
+use App\Http\Requests\UpdateProjectRequest;
 
 class ProjectController extends Controller
 {
@@ -18,29 +20,16 @@ public function create()
     return view('admin.projects.create');
 }
     
-public function store(Request $request)
+public function store(StoreProjectRequest $request)
 {
-    $validated = $request->validate([
-        'title' => ['required', 'string', 'max:255'],
-        'description' => ['required', 'string'],
-        'tech' => ['nullable', 'string'],   // we will turn this into an array
-        'link' => ['nullable', 'url', 'max:255'],
-    ]);
+    $validated = $request->validated();
 
-    $techArray = collect(explode(',', $validated['tech'] ?? ''))
-        ->map(fn ($t) => trim($t))
-        ->filter()
-        ->values()
-        ->all();
+    // If you do file uploads, handle them BEFORE create().
+    // Otherwise:
+    Project::create($validated);
 
-    Project::create([
-        'title' => $validated['title'],
-        'description' => $validated['description'],
-        'tech' => $techArray,
-        'link' => $validated['link'] ?? null,
-    ]);
-
-    return redirect()->route('admin.projects.index')->with('success', 'Project created!');
+    return redirect()->route('admin.projects.index')
+        ->with('success', 'Project created successfully.');
 }
 
 public function edit(Project $project)
@@ -48,29 +37,15 @@ public function edit(Project $project)
     return view('admin.projects.edit', compact('project'));
 }
 
-public function update(Request $request, Project $project)
+
+public function update(UpdateProjectRequest $request, Project $project)
 {
-    $validated = $request->validate([
-        'title' => ['required', 'string', 'max:255'],
-        'description' => ['required', 'string'],
-        'tech' => ['nullable', 'string'],
-        'link' => ['nullable', 'url', 'max:255'],
-    ]);
+    $validated = $request->validated();
 
-    $techArray = collect(explode(',', $validated['tech'] ?? ''))
-        ->map(fn ($t) => trim($t))
-        ->filter()
-        ->values()
-        ->all();
+    $project->update($validated);
 
-    $project->update([
-        'title' => $validated['title'],
-        'description' => $validated['description'],
-        'tech' => $techArray,
-        'link' => $validated['link'] ?? null,
-    ]);
-
-    return redirect()->route('admin.projects.index')->with('success', 'Project updated!');
+    return redirect()->route('admin.projects.index')
+        ->with('success', 'Project updated successfully.');
 }
 
 public function destroy(Project $project)
