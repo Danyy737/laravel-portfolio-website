@@ -2,6 +2,12 @@
 
 A personal portfolio website built with Laravel featuring a custom admin CMS.
 
+## About
+
+A Laravel-based portfolio website with a public-facing UI and an admin CMS.
+Includes authentication, admin-only access control, rate-limited contact forms,
+and clean server-side validation using Form Requests.
+
 ## Features
 - Admin authentication
 - Project CRUD management
