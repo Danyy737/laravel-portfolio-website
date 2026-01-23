@@ -12,22 +12,17 @@ class ContactRequest extends FormRequest
         return true;
     }
 
-    public function rules(): array
-    {
-        return [
-            'name'    => ['required', 'string', 'max:255'],
-            'email'   => ['required', 'email'],
-            'message' => ['required', 'string'],
-        ];
+public function rules(): array
+{
+    // Only validate when submitting the form
+    if (!$this->isMethod('post')) {
+        return [];
     }
 
-    public function messages(): array
-    {
-        return [
-            'name.required' => 'Please enter your name.',
-            'email.required' => 'Please enter your email.',
-            'email.email' => 'Please enter a valid email address.',
-            'message.required' => 'Please enter a message.',
-        ];
-    }
+    return [
+        'name'    => ['required', 'string', 'max:255'],
+        'email'   => ['required', 'email'],
+        'message' => ['required', 'string'],
+    ];
+}
 }
