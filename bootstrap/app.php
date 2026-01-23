@@ -14,6 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
   ->withMiddleware(function (Middleware $middleware) {
     $middleware->alias([
         'admin' => EnsureAdmin::class,
+        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'friendly.throttle' => \App\Http\Middleware\FriendlyThrottle::class,
     ]);
 })
     ->withExceptions(function (Exceptions $exceptions): void {

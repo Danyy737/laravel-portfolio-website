@@ -5,8 +5,18 @@
 <p class="page-subtitle">Feel free to reach out — I’ll reply as soon as I can.</p>
 
 @if(session('success'))
-    <div class="success-message fade-in">
+    <div class="flash flash-success" data-flash>
         {{ session('success') }}
+    </div>
+@endif
+
+@if ($errors->any())
+    <div class="flash flash-error" data-flash>
+        @if ($errors->has('rate_limit'))
+            {{ $errors->first('rate_limit') }}
+        @else
+            {{ $errors->first() }}
+        @endif
     </div>
 @endif
 
@@ -14,17 +24,17 @@
     @csrf
 
     <div class="field">
-        <input type="text" name="name" placeholder=" " required>
+        <input type="text" name="name" placeholder=" " value="{{ old('name') }}" required>
         <label>Name</label>
     </div>
 
     <div class="field">
-        <input type="email" name="email" placeholder=" " required>
+        <input type="email" name="email" placeholder=" " value="{{ old('email') }}" required>
         <label>Email</label>
     </div>
 
     <div class="field">
-        <textarea name="message" rows="4" placeholder=" " required></textarea>
+        <textarea name="message" rows="4" placeholder=" " required>{{ old('message') }}</textarea>
         <label>Message</label>
     </div>
 
@@ -38,6 +48,18 @@
     form.addEventListener('submit', () => {
         button.disabled = true;
         button.innerText = 'Sending...';
+    });
+</script>
+
+<script>
+    // Auto-hide flash messages
+    window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            document.querySelectorAll('[data-flash]').forEach(el => {
+                el.classList.add('fade-out');
+                setTimeout(() => el.remove(), 400);
+            });
+        }, 3500); // 3.5 seconds
     });
 </script>
 @endsection

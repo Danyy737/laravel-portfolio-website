@@ -14,7 +14,9 @@ Route::get('/projects', [PortfolioController::class, 'projects'])->name('project
 // If your contact method handles POST too, keep it as match.
 // If it's GET-only right now, leave as get.
 Route::get('/contact', [PortfolioController::class, 'contact'])->name('contact');
-Route::post('/contact', [PortfolioController::class, 'contact'])->name('contact.submit');
+Route::post('/contact', [PortfolioController::class, 'contact'])
+    ->middleware('friendly.throttle:1,1')
+    ->name('contact.submit');
 
 
 // Breeze dashboard (logged-in user dashboard)
