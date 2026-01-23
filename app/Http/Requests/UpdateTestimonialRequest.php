@@ -6,23 +6,18 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateTestimonialRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            //
+            'project_id' => ['required', 'integer', 'exists:projects,id'],
+            'author_name' => ['required', 'string', 'max:255'],
+            'content' => ['required', 'string', 'max:2000'],
+            'rating' => ['nullable', 'integer', 'between:1,5'],
         ];
     }
 }
