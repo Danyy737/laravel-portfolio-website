@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\Testimonial;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreTestimonialRequest;
+use App\Http\Requests\UpdateTestimonialRequest;
 
 class TestimonialController extends Controller
 {
@@ -22,43 +24,30 @@ public function index()
     $projects = \App\Models\Project::orderBy('title')->get();
     return view('admin.testimonials.create', compact('projects'));
 }
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'project_id' => ['required', 'exists:projects,id'],
-            'author_name' => ['required', 'string', 'max:255'],
-            'author_role' => ['nullable', 'string', 'max:255'],
-            'quote' => ['required', 'string', 'max:1000'],
-        ]);
+public function store(StoreTestimonialRequest $request)
+{
+    $validated = $request->validated();
 
-        Testimonial::create($validated);
+    Testimonial::create($validated);
 
-        return redirect()
-            ->route('admin.testimonials.index')
-            ->with('success', 'Testimonial created successfully.');
-    }
-
+    return redirect()->route('admin.testimonials.index')
+        ->with('success', 'Testimonial created successfully.');
+}
 public function edit(\App\Models\Testimonial $testimonial)
 {
     $projects = \App\Models\Project::orderBy('title')->get();
     return view('admin.testimonials.edit', compact('testimonial', 'projects'));
 }
-    public function update(Request $request, Testimonial $testimonial)
-    {
-        $validated = $request->validate([
-            'project_id' => ['required', 'exists:projects,id'],
-            'author_name' => ['required', 'string', 'max:255'],
-            'author_role' => ['nullable', 'string', 'max:255'],
-            'quote' => ['required', 'string', 'max:1000'],
-        ]);
 
-        $testimonial->update($validated);
+public function update(UpdateTestimonialRequest $request, Testimonial $testimonial)
+{
+    $validated = $request->validated();
 
-        return redirect()
-            ->route('admin.testimonials.index')
-            ->with('success', 'Testimonial updated successfully.');
-    }
+    $testimonial->update($validated);
 
+    return redirect()->route('admin.testimonials.index')
+        ->with('success', 'Testimonial updated successfully.');
+}
     public function destroy(Testimonial $testimonial)
     {
         $testimonial->delete();
