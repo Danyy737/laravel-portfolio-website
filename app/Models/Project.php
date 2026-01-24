@@ -18,9 +18,9 @@ class Project extends Model
     ];
 
 
-    public function testimonials()
+public function testimonials()
 {
-    return $this->hasMany(Testimonial::class);
+    return $this->hasMany(\App\Models\Testimonial::class);
 }
 }
 
