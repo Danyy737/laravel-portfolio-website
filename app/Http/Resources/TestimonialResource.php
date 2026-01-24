@@ -7,13 +7,17 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class TestimonialResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'project_id' => $this->project_id,
+            'author_name' => $this->author_name,
+            'author_role' => $this->author_role,
+            'quote' => $this->quote,
+
+            'created_at' => optional($this->created_at)?->toISOString(),
+            'updated_at' => optional($this->updated_at)?->toISOString(),
+        ];
     }
 }
