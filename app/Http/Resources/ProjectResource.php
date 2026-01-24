@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\TestimonialResource;
 
 class ProjectResource extends JsonResource
 {
@@ -21,6 +22,10 @@ class ProjectResource extends JsonResource
 
             'created_at' => optional($this->created_at)?->format('Y-m-d\TH:i:s\Z'),
             'updated_at' => optional($this->updated_at)?->format('Y-m-d\TH:i:s\Z'),
+
+            'testimonials' => TestimonialResource::collection(
+    $this->whenLoaded('testimonials')
+),
         ];
     }
 }

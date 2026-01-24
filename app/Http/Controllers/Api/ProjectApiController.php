@@ -21,8 +21,14 @@ public function index(Request $request)
     return ProjectResource::collection($projects);
 }
 
-    public function show(Project $project)
-    {
-        return new ProjectResource($project);
-    }
+public function show(Request $request, Project $project)
+{
+    $project->loadMissing(
+        $request->query('include') === 'testimonials'
+            ? ['testimonials']
+            : []
+    );
+
+    return new ProjectResource($project);
+}
 }
