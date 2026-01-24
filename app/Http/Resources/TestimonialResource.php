@@ -16,8 +16,8 @@ class TestimonialResource extends JsonResource
             'author_role' => $this->author_role,
             'quote' => $this->quote,
 
-            'created_at' => optional($this->created_at)?->toISOString(),
-            'updated_at' => optional($this->updated_at)?->toISOString(),
+            'created_at' => optional($this->created_at)?->format('Y-m-d\TH:i:s\Z'),
+            'updated_at' => optional($this->updated_at)?->format('Y-m-d\TH:i:s\Z'),
         ];
-    }
+    } 
 }

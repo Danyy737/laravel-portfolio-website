@@ -19,8 +19,8 @@ class ProjectResource extends JsonResource
             'github_url' => $this->github_url ?? null,
             'tech_stack' => $this->tech_stack ?? null,
 
-            'created_at' => optional($this->created_at)?->toISOString(),
-            'updated_at' => optional($this->updated_at)?->toISOString(),
+            'created_at' => optional($this->created_at)?->format('Y-m-d\TH:i:s\Z'),
+            'updated_at' => optional($this->updated_at)?->format('Y-m-d\TH:i:s\Z'),
         ];
     }
 }
