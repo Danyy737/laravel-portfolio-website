@@ -22,4 +22,19 @@ class AdminProjectController extends Controller
             'project' => $project,
         ], 201);
     }
+
+    public function update(Request $request, Project $project)
+{
+    $validated = $request->validate([
+        'title' => ['required', 'string', 'max:255'],
+        'description' => ['required', 'string'],
+    ]);
+
+    $project->update($validated);
+
+    return response()->json([
+        'message' => 'Project updated successfully',
+        'project' => $project,
+    ], 200);
+}
 }

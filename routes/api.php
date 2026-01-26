@@ -35,6 +35,9 @@ Route::prefix('admin')->group(function () {
 
         // Projects (write)
         Route::post('/projects', [AdminProjectController::class, 'store']);
+
+        Route::put('/projects/{project}', [AdminProjectController::class, 'update']);
+
     });
 
 });
