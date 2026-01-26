@@ -22,5 +22,6 @@ public function testimonials()
 {
     return $this->hasMany(\App\Models\Testimonial::class);
 }
+
 }
 
