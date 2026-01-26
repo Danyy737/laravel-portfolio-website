@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ProjectApiController;
 use App\Http\Controllers\Api\ProjectTestimonialApiController;
 use App\Http\Controllers\Api\Admin\AuthTokenController;
 use App\Http\Controllers\Api\Admin\AdminProjectController;
+use App\Http\Controllers\Api\Admin\AdminTestimonialController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +41,16 @@ Route::prefix('admin')->group(function () {
 
         Route::delete('/projects/{project}', [AdminProjectController::class, 'destroy']);
 
+
+        // Testimonials (write) 
+        
+Route::post('/projects/{project}/testimonials', [AdminTestimonialController::class, 'store']);
+
+Route::patch('/testimonials/{testimonial}', [AdminTestimonialController::class, 'update']);
+
+Route::put('/testimonials/{testimonial}', [AdminTestimonialController::class, 'update']);
+
+Route::delete('/testimonials/{testimonial}', [AdminTestimonialController::class, 'destroy']);
     });
 
 });
