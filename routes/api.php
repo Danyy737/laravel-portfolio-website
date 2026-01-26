@@ -38,6 +38,8 @@ Route::prefix('admin')->group(function () {
 
         Route::put('/projects/{project}', [AdminProjectController::class, 'update']);
 
+        Route::delete('/projects/{project}', [AdminProjectController::class, 'destroy']);
+
     });
 
 });

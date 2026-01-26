@@ -37,4 +37,13 @@ class AdminProjectController extends Controller
         'project' => $project,
     ], 200);
 }
+
+public function destroy(\App\Models\Project $project)
+{
+    $project->delete();
+
+    return response()->json([
+        'message' => 'Project deleted successfully',
+    ], 200);
+}
 }
