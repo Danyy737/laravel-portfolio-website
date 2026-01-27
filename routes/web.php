@@ -19,6 +19,9 @@ Route::post('/contact', [PortfolioController::class, 'contact'])
 // ✅ REACT (PUBLIC) 
 Route::view('/react', 'react');
 
+Route::view('/react/{any}', 'react')
+    ->where('any', '.*');
+
 Route::get('/dashboard', function () {
     $user = auth()->user();
 
