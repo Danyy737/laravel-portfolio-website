@@ -3,12 +3,16 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Layout from "./components/Layout.jsx";
+
+// Public
 import ProjectsIndex from "./pages/ProjectsIndex.jsx";
 import ProjectShow from "./pages/ProjectShow.jsx";
 
-import AdminLogin from "./pages/admin/AdminLogin.jsx";
-import AdminHome from "./pages/admin/AdminHome.jsx";
+// Admin
 import RequireAdminAuth from "./components/admin/RequireAdminAuth.jsx";
+import AdminLogin from "./pages/admin/AdminLogin.jsx";
+import AdminProjectsIndex from "./pages/admin/AdminProjectsIndex.jsx";
+import AdminProjectForm from "./pages/admin/AdminProjectForm.jsx";
 
 function App() {
   return (
@@ -20,12 +24,46 @@ function App() {
         <Route path="/projects/:id" element={<Layout><ProjectShow /></Layout>} />
 
         <Route path="/admin/login" element={<Layout><AdminLogin /></Layout>} />
+
         <Route
           path="/admin"
           element={
             <Layout>
               <RequireAdminAuth>
-                <AdminHome />
+                <Navigate to="/admin/projects" replace />
+              </RequireAdminAuth>
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/admin/projects"
+          element={
+            <Layout>
+              <RequireAdminAuth>
+                <AdminProjectsIndex />
+              </RequireAdminAuth>
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/admin/projects/new"
+          element={
+            <Layout>
+              <RequireAdminAuth>
+                <AdminProjectForm />
+              </RequireAdminAuth>
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/admin/projects/:id/edit"
+          element={
+            <Layout>
+              <RequireAdminAuth>
+                <AdminProjectForm />
               </RequireAdminAuth>
             </Layout>
           }

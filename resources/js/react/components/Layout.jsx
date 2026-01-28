@@ -1,5 +1,6 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { getAdminToken, logoutAdmin } from "../api/adminAuth";
 
 const linkStyle = ({ isActive }) => ({
   textDecoration: "none",
@@ -11,13 +12,49 @@ const linkStyle = ({ isActive }) => ({
 });
 
 export default function Layout({ children }) {
+  const nav = useNavigate();
+const authed = Boolean(getAdminToken());
+
+  async function onLogout() {
+ await logoutAdmin();
+nav("/admin/login", { replace: true });
+  }
+
   return (
     <div style={{ fontFamily: "system-ui" }}>
       <div style={{ maxWidth: 980, margin: "0 auto", padding: 24 }}>
-        <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <header
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <h2 style={{ margin: 0 }}>React Portfolio</h2>
-          <nav style={{ display: "flex", gap: 10 }}>
-            <NavLink to="/projects" style={linkStyle}>Projects</NavLink>
+
+          <nav style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            <NavLink to="/projects" style={linkStyle}>
+              Projects
+            </NavLink>
+
+            <NavLink to="/admin/projects" style={linkStyle}>
+              Admin
+            </NavLink>
+
+            {authed && (
+              <button
+                onClick={onLogout}
+                style={{
+                  padding: "8px 10px",
+                  borderRadius: 10,
+                  border: "1px solid #ddd",
+                  background: "white",
+                  cursor: "pointer",
+                }}
+              >
+                Logout
+              </button>
+            )}
           </nav>
         </header>
 

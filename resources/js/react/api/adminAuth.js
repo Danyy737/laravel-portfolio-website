@@ -31,11 +31,15 @@ export async function loginAdmin(email, password) {
   }
 
   const json = await res.json();
-  // Expecting something like { token: "..." }
-  if (!json?.token) throw new Error("Login response missing token.");
-  setAdminToken(json.token);
-  return json.token;
+  console.log("LOGIN JSON:", json);
+
+  const token = json?.access_token; // ✅ your backend key
+  if (!token) throw new Error("Login response missing token.");
+
+  setAdminToken(token);
+  return token;
 }
+
 
 // Calls your existing endpoint: DELETE /api/admin/token
 export async function logoutAdmin() {
