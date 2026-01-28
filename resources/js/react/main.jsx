@@ -16,6 +16,10 @@ import AdminProjectsIndex from "./pages/admin/AdminProjectsIndex.jsx";
 import AdminProjectForm from "./pages/admin/AdminProjectForm.jsx";
 import AdminTestimonialsPage from "./pages/admin/AdminTestimonialsPage.jsx";
 
+//styling
+import "./theme.css";
+
+
 function App() {
   return (
     <BrowserRouter basename="/react">

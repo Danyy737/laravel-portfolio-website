@@ -1,0 +1,52 @@
+:root {
+  --bg: #ffffff;
+  --card: #ffffff;
+  --text: #111111;
+  --muted: rgba(0, 0, 0, 0.7);
+  --border: #dddddd;
+  --borderSoft: #eeeeee;
+
+  --btnBg: #ffffff;
+  --btnText: #111111;
+  --btnBorder: #dddddd;
+
+  --primaryBg: #111111;
+  --primaryText: #ffffff;
+  --primaryBorder: #111111;
+
+  --dangerBg: #dc3545;
+  --dangerText: #ffffff;
+  --dangerBorder: #b02a37;
+
+  --shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+:root[data-theme="dark"] {
+  --bg: #0b0f17;
+  --card: #0f1624;
+  --text: #e8eefc;
+  --muted: rgba(232, 238, 252, 0.7);
+  --border: #263245;
+  --borderSoft: #1c2738;
+
+  --btnBg: #0f1624;
+  --btnText: #e8eefc;
+  --btnBorder: #263245;
+
+  --primaryBg: #e8eefc;
+  --primaryText: #0b0f17;
+  --primaryBorder: #e8eefc;
+
+  --dangerBg: #ff4d5f;
+  --dangerText: #0b0f17;
+  --dangerBorder: #ff4d5f;
+
+  --shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+a { color: inherit; }
