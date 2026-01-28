@@ -1,6 +1,7 @@
 // resources/js/react/pages/admin/AdminTestimonialsPage.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { useToast } from "../../components/ToastProvider.jsx";
 
 import {
   listProjectTestimonials,
@@ -20,6 +21,7 @@ function normalizeList(json) {
 export default function AdminTestimonialsPage() {
   const { projectId } = useParams();
   const navigate = useNavigate();
+  const toast = useToast();
 
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
@@ -35,7 +37,6 @@ export default function AdminTestimonialsPage() {
   const [editError, setEditError] = useState("");
 
   const [deletingId, setDeletingId] = useState(null);
-  const [actionMsg, setActionMsg] = useState("");
 
   const sortedItems = useMemo(() => {
     return [...items].sort((a, b) => {
@@ -65,7 +66,6 @@ export default function AdminTestimonialsPage() {
   }, [projectId]);
 
   function startEdit(t) {
-    setActionMsg("");
     setEditError("");
     setEditingId(t.id);
     setEditForm({
@@ -83,7 +83,6 @@ export default function AdminTestimonialsPage() {
 
   async function onCreate(e) {
     e.preventDefault();
-    setActionMsg("");
     setCreateError("");
 
     const payload = {
@@ -101,17 +100,17 @@ export default function AdminTestimonialsPage() {
     try {
       await createProjectTestimonial(projectId, payload);
       setCreateForm(emptyForm);
-      await load(); // ✅ don’t depend on response body
-      setActionMsg("Testimonial created.");
+      await load(); // don’t depend on response body
+      toast.success("Testimonial created.");
     } catch (e2) {
       setCreateError(e2?.message || "Create failed.");
+      toast.error(e2?.message || "Create failed.");
     } finally {
       setCreating(false);
     }
   }
 
   async function onSaveEdit() {
-    setActionMsg("");
     setEditError("");
 
     const payload = {
@@ -129,17 +128,17 @@ export default function AdminTestimonialsPage() {
     try {
       await updateTestimonial(editingId, payload);
       cancelEdit();
-      await load(); // ✅ don’t depend on response body
-      setActionMsg("Testimonial updated.");
+      await load(); // don’t depend on response body
+      toast.success("Testimonial updated.");
     } catch (e) {
       setEditError(e?.message || "Update failed.");
+      toast.error(e?.message || "Update failed.");
     } finally {
       setSavingEdit(false);
     }
   }
 
   async function onDelete(id) {
-    setActionMsg("");
     const ok = window.confirm("Delete this testimonial? This cannot be undone.");
     if (!ok) return;
 
@@ -148,9 +147,9 @@ export default function AdminTestimonialsPage() {
       await deleteTestimonial(id);
       setItems((prev) => prev.filter((x) => x.id !== id)); // instant UI
       if (editingId === id) cancelEdit();
-      setActionMsg("Testimonial deleted.");
+      toast.success("Testimonial deleted.");
     } catch (e) {
-      window.alert(e?.message || "Delete failed.");
+      toast.error(e?.message || "Delete failed.");
     } finally {
       setDeletingId(null);
     }
@@ -164,7 +163,6 @@ export default function AdminTestimonialsPage() {
           <p style={{ marginTop: 6, opacity: 0.8 }}>
             Project ID: <strong>{projectId}</strong>
           </p>
-          {actionMsg ? <p style={{ marginTop: 6, opacity: 0.85 }}>{actionMsg}</p> : null}
         </div>
 
         <div style={{ display: "flex", gap: 10 }}>
