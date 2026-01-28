@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { apiGet } from "../../api/client";
 import { adminCreateProject, adminUpdateProject } from "../../api/adminProjects";
 import { useToast } from "../../components/ToastProvider.jsx";
+import { ui } from "../../reactStyles.js";
 
 export default function AdminProjectForm() {
   const { id } = useParams(); // undefined for "new"
@@ -71,56 +72,65 @@ export default function AdminProjectForm() {
   }
 
   return (
-    <div style={{ maxWidth: 700 }}>
-      <p style={{ marginTop: 0 }}>
-        <Link to="/admin/projects">← Back to admin projects</Link>
-      </p>
-
-      {isEdit && (
-        <p style={{ marginTop: 4 }}>
-          <Link to={`/admin/projects/${id}/testimonials`}>Manage Testimonials →</Link>
-        </p>
-      )}
-
-      <h1 style={{ marginBottom: 8 }}>{isEdit ? "Edit Project" : "New Project"}</h1>
-
-      {error && (
-        <div style={{ padding: 12, border: "1px solid #f5c2c7", background: "#f8d7da", borderRadius: 10 }}>
-          {error}
+    <div style={ui.page}>
+      <div style={ui.headerRow}>
+        <div>
+          <h1 style={{ margin: 0 }}>{isEdit ? "Edit Project" : "New Project"}</h1>
+          <p style={{ marginTop: 6, ...ui.muted }}>
+            {isEdit ? "Update your project details." : "Create a new project."}
+          </p>
         </div>
-      )}
 
-      {loading ? (
-        <p>Loading…</p>
-      ) : (
-        <form onSubmit={onSubmit} style={{ display: "grid", gap: 12, marginTop: 12 }}>
-          <label>
-            <div style={{ fontSize: 14, opacity: 0.8 }}>Title</div>
-            <input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-              style={{ width: "100%", padding: 10 }}
-              disabled={saving}
-            />
-          </label>
+        <div style={ui.btnRow}>
+          <Link to="/admin/projects" style={ui.pillLink}>← Back</Link>
+          {isEdit && (
+            <Link to={`/admin/projects/${id}/testimonials`} style={ui.pillLink}>
+              Manage Testimonials →
+            </Link>
+          )}
+        </div>
+      </div>
 
-          <label>
-            <div style={{ fontSize: 14, opacity: 0.8 }}>Description</div>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={6}
-              style={{ width: "100%", padding: 10 }}
-              disabled={saving}
-            />
-          </label>
+      {error && <div style={ui.error}>{error}</div>}
 
-          <button disabled={saving} type="submit" style={{ padding: 10 }}>
-            {saving ? "Saving…" : "Save"}
-          </button>
-        </form>
-      )}
+      <div style={{ ...ui.card, marginTop: 12 }}>
+        {loading ? (
+          <p style={{ margin: 0 }}>Loading…</p>
+        ) : (
+          <form onSubmit={onSubmit} style={{ display: "grid", gap: 12 }}>
+            <label style={ui.label}>
+              <div style={{ fontSize: 14, ...ui.muted }}>Title</div>
+              <input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+                style={ui.input}
+                disabled={saving}
+              />
+            </label>
+
+            <label style={ui.label}>
+              <div style={{ fontSize: 14, ...ui.muted }}>Description</div>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={6}
+                style={ui.textarea}
+                disabled={saving}
+              />
+            </label>
+
+            <div style={ui.btnRow}>
+              <button type="submit" disabled={saving} style={ui.btnPrimary}>
+                {saving ? "Saving…" : "Save"}
+              </button>
+              <Link to="/admin/projects" style={ui.pillLink}>
+                Cancel
+              </Link>
+            </div>
+          </form>
+        )}
+      </div>
     </div>
   );
 }

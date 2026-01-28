@@ -1,7 +1,7 @@
-// resources/js/react/pages/admin/AdminTestimonialsPage.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useToast } from "../../components/ToastProvider.jsx";
+import { ui } from "../../reactStyles.js";
 
 import {
   listProjectTestimonials,
@@ -100,11 +100,12 @@ export default function AdminTestimonialsPage() {
     try {
       await createProjectTestimonial(projectId, payload);
       setCreateForm(emptyForm);
-      await load(); // don’t depend on response body
+      await load();
       toast.success("Testimonial created.");
     } catch (e2) {
-      setCreateError(e2?.message || "Create failed.");
-      toast.error(e2?.message || "Create failed.");
+      const msg = e2?.message || "Create failed.";
+      setCreateError(msg);
+      toast.error(msg);
     } finally {
       setCreating(false);
     }
@@ -128,11 +129,12 @@ export default function AdminTestimonialsPage() {
     try {
       await updateTestimonial(editingId, payload);
       cancelEdit();
-      await load(); // don’t depend on response body
+      await load();
       toast.success("Testimonial updated.");
     } catch (e) {
-      setEditError(e?.message || "Update failed.");
-      toast.error(e?.message || "Update failed.");
+      const msg = e?.message || "Update failed.";
+      setEditError(msg);
+      toast.error(msg);
     } finally {
       setSavingEdit(false);
     }
@@ -145,7 +147,7 @@ export default function AdminTestimonialsPage() {
     setDeletingId(id);
     try {
       await deleteTestimonial(id);
-      setItems((prev) => prev.filter((x) => x.id !== id)); // instant UI
+      setItems((prev) => prev.filter((x) => x.id !== id));
       if (editingId === id) cancelEdit();
       toast.success("Testimonial deleted.");
     } catch (e) {
@@ -156,179 +158,189 @@ export default function AdminTestimonialsPage() {
   }
 
   return (
-    <div style={{ maxWidth: 900, margin: "0 auto", padding: 16 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
+    <div style={ui.page}>
+      <div style={ui.headerRow}>
         <div>
-          <h2 style={{ margin: 0 }}>Testimonials</h2>
-          <p style={{ marginTop: 6, opacity: 0.8 }}>
+          <h1 style={{ margin: 0 }}>Testimonials</h1>
+          <p style={{ marginTop: 6, ...ui.muted }}>
             Project ID: <strong>{projectId}</strong>
           </p>
         </div>
 
-        <div style={{ display: "flex", gap: 10 }}>
-          <button type="button" onClick={() => navigate(-1)}>
+        <div style={ui.btnRow}>
+          <button type="button" onClick={() => navigate(-1)} style={ui.btn}>
             ← Back
           </button>
-          <Link to={`/admin/projects/${projectId}/edit`}>Edit Project</Link>
+          <Link to={`/admin/projects/${projectId}/edit`} style={ui.pillLink}>
+            Edit Project
+          </Link>
         </div>
       </div>
 
-      <hr style={{ margin: "16px 0" }} />
+      <div style={{ display: "grid", gap: 12, marginTop: 12 }}>
+        {/* Create */}
+        <section style={ui.card}>
+          <h3 style={{ marginTop: 0 }}>Add testimonial</h3>
 
-      {/* Create */}
-      <section style={{ padding: 12, border: "1px solid #ddd", borderRadius: 8, marginBottom: 16 }}>
-        <h3 style={{ marginTop: 0 }}>Add testimonial</h3>
+          {createError ? <div style={ui.error}>{createError}</div> : null}
 
-        {createError ? (
-          <div style={{ padding: 10, border: "1px solid #f99", borderRadius: 8, marginBottom: 10 }}>
-            {createError}
-          </div>
-        ) : null}
+          <form onSubmit={onCreate} style={{ display: "grid", gap: 12, marginTop: 10 }}>
+            <label style={ui.label}>
+              <div style={{ fontSize: 14, ...ui.muted }}>Author name</div>
+              <input
+                value={createForm.author_name}
+                onChange={(e) => setCreateForm((p) => ({ ...p, author_name: e.target.value }))}
+                placeholder="Jane Doe"
+                disabled={creating}
+                style={ui.input}
+              />
+            </label>
 
-        <form onSubmit={onCreate} style={{ display: "grid", gap: 10 }}>
-          <div style={{ display: "grid", gap: 6 }}>
-            <label>Author name</label>
-            <input
-              value={createForm.author_name}
-              onChange={(e) => setCreateForm((p) => ({ ...p, author_name: e.target.value }))}
-              placeholder="Jane Doe"
-              disabled={creating}
-            />
-          </div>
+            <label style={ui.label}>
+              <div style={{ fontSize: 14, ...ui.muted }}>Author role</div>
+              <input
+                value={createForm.author_role}
+                onChange={(e) => setCreateForm((p) => ({ ...p, author_role: e.target.value }))}
+                placeholder="CTO at Example Co"
+                disabled={creating}
+                style={ui.input}
+              />
+            </label>
 
-          <div style={{ display: "grid", gap: 6 }}>
-            <label>Author role</label>
-            <input
-              value={createForm.author_role}
-              onChange={(e) => setCreateForm((p) => ({ ...p, author_role: e.target.value }))}
-              placeholder="CTO at Example Co"
-              disabled={creating}
-            />
-          </div>
+            <label style={ui.label}>
+              <div style={{ fontSize: 14, ...ui.muted }}>Quote</div>
+              <textarea
+                rows={4}
+                value={createForm.quote}
+                onChange={(e) => setCreateForm((p) => ({ ...p, quote: e.target.value }))}
+                placeholder="What did they say?"
+                disabled={creating}
+                style={ui.textarea}
+              />
+            </label>
 
-          <div style={{ display: "grid", gap: 6 }}>
-            <label>Quote</label>
-            <textarea
-              rows={4}
-              value={createForm.quote}
-              onChange={(e) => setCreateForm((p) => ({ ...p, quote: e.target.value }))}
-              placeholder="What did they say?"
-              disabled={creating}
-            />
-          </div>
+            <div style={ui.btnRow}>
+              <button type="submit" disabled={creating} style={ui.btnPrimary}>
+                {creating ? "Creating..." : "Create testimonial"}
+              </button>
+            </div>
+          </form>
+        </section>
 
-          <div style={{ display: "flex", gap: 10 }}>
-            <button type="submit" disabled={creating}>
-              {creating ? "Creating..." : "Create testimonial"}
+        {/* List */}
+        <section style={ui.card}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12 }}>
+            <h3 style={{ margin: 0 }}>Existing testimonials</h3>
+            <button type="button" onClick={load} style={ui.btn} disabled={loading}>
+              {loading ? "Refreshing…" : "Refresh"}
             </button>
           </div>
-        </form>
-      </section>
 
-      {/* List */}
-      <section>
-        <h3 style={{ marginTop: 0 }}>Existing testimonials</h3>
+          {loading ? <p style={{ marginTop: 12 }}>Loading…</p> : null}
 
-        {loading ? <p>Loading…</p> : null}
+          {loadError ? (
+            <div style={{ ...ui.error, marginTop: 12 }}>
+              <div style={{ marginBottom: 8 }}>{loadError}</div>
+              <button onClick={load} style={ui.btn}>Retry</button>
+            </div>
+          ) : null}
 
-        {loadError ? (
-          <div style={{ padding: 10, border: "1px solid #f99", borderRadius: 8 }}>
-            <div style={{ marginBottom: 8 }}>{loadError}</div>
-            <button onClick={load}>Retry</button>
-          </div>
-        ) : null}
+          {!loading && !loadError && sortedItems.length === 0 ? (
+            <p style={{ marginTop: 12, ...ui.muted }}>No testimonials yet — add one above.</p>
+          ) : null}
 
-        {!loading && !loadError && sortedItems.length === 0 ? (
-          <p style={{ opacity: 0.8 }}>No testimonials yet — add one above.</p>
-        ) : null}
+          {!loading && !loadError && sortedItems.length > 0 ? (
+            <div style={{ display: "grid", gap: 12, marginTop: 12 }}>
+              {sortedItems.map((t) => {
+                const isEditing = editingId === t.id;
+                const isDeleting = deletingId === t.id;
 
-        {!loading && !loadError && sortedItems.length > 0 ? (
-          <div style={{ display: "grid", gap: 12 }}>
-            {sortedItems.map((t) => {
-              const isEditing = editingId === t.id;
-              const isDeleting = deletingId === t.id;
+                return (
+                  <div key={t.id} style={{ border: "1px solid #eee", borderRadius: 12, padding: 12 }}>
+                    {!isEditing ? (
+                      <>
+                        <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
+                          <div>
+                            <strong>{t.author_name}</strong>
+                            {t.author_role ? <span style={{ ...ui.muted }}> — {t.author_role}</span> : null}
+                          </div>
 
-              return (
-                <div key={t.id} style={{ padding: 12, border: "1px solid #ddd", borderRadius: 8 }}>
-                  {!isEditing ? (
-                    <>
-                      <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
-                        <div>
-                          <strong>{t.author_name}</strong>
-                          {t.author_role ? <span style={{ opacity: 0.8 }}> — {t.author_role}</span> : null}
+                          <div style={ui.btnRow}>
+                            <button type="button" onClick={() => startEdit(t)} disabled={isDeleting} style={ui.btn}>
+                              Edit
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => onDelete(t.id)}
+                              disabled={isDeleting}
+                              style={ui.btnDanger}
+                            >
+                              {isDeleting ? "Deleting..." : "Delete"}
+                            </button>
+                          </div>
                         </div>
 
-                        <div style={{ display: "flex", gap: 10 }}>
-                          <button type="button" onClick={() => startEdit(t)} disabled={isDeleting}>
-                            Edit
-                          </button>
-
-                          <button type="button" onClick={() => onDelete(t.id)} disabled={isDeleting}>
-                            {isDeleting ? "Deleting..." : "Delete"}
-                          </button>
-                        </div>
-                      </div>
-
-                      <p style={{ marginTop: 10, whiteSpace: "pre-wrap" }}>{t.quote}</p>
-                    </>
-                  ) : (
-                    <>
-                      <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
-                        <strong>Edit testimonial</strong>
-                        <button type="button" onClick={cancelEdit} disabled={savingEdit}>
-                          Cancel
-                        </button>
-                      </div>
-
-                      {editError ? (
-                        <div style={{ padding: 10, border: "1px solid #f99", borderRadius: 8, margin: "10px 0" }}>
-                          {editError}
-                        </div>
-                      ) : null}
-
-                      <div style={{ display: "grid", gap: 10, marginTop: 10 }}>
-                        <div style={{ display: "grid", gap: 6 }}>
-                          <label>Author name</label>
-                          <input
-                            value={editForm.author_name}
-                            onChange={(e) => setEditForm((p) => ({ ...p, author_name: e.target.value }))}
-                            disabled={savingEdit}
-                          />
-                        </div>
-
-                        <div style={{ display: "grid", gap: 6 }}>
-                          <label>Author role</label>
-                          <input
-                            value={editForm.author_role}
-                            onChange={(e) => setEditForm((p) => ({ ...p, author_role: e.target.value }))}
-                            disabled={savingEdit}
-                          />
-                        </div>
-
-                        <div style={{ display: "grid", gap: 6 }}>
-                          <label>Quote</label>
-                          <textarea
-                            rows={4}
-                            value={editForm.quote}
-                            onChange={(e) => setEditForm((p) => ({ ...p, quote: e.target.value }))}
-                            disabled={savingEdit}
-                          />
-                        </div>
-
-                        <div style={{ display: "flex", gap: 10 }}>
-                          <button type="button" onClick={onSaveEdit} disabled={savingEdit}>
-                            {savingEdit ? "Saving..." : "Save"}
+                        <p style={{ marginTop: 10, whiteSpace: "pre-wrap" }}>{t.quote}</p>
+                      </>
+                    ) : (
+                      <>
+                        <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
+                          <strong>Edit testimonial</strong>
+                          <button type="button" onClick={cancelEdit} disabled={savingEdit} style={ui.btn}>
+                            Cancel
                           </button>
                         </div>
-                      </div>
-                    </>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        ) : null}
-      </section>
+
+                        {editError ? <div style={{ ...ui.error, marginTop: 12 }}>{editError}</div> : null}
+
+                        <div style={{ display: "grid", gap: 12, marginTop: 12 }}>
+                          <label style={ui.label}>
+                            <div style={{ fontSize: 14, ...ui.muted }}>Author name</div>
+                            <input
+                              value={editForm.author_name}
+                              onChange={(e) => setEditForm((p) => ({ ...p, author_name: e.target.value }))}
+                              disabled={savingEdit}
+                              style={ui.input}
+                            />
+                          </label>
+
+                          <label style={ui.label}>
+                            <div style={{ fontSize: 14, ...ui.muted }}>Author role</div>
+                            <input
+                              value={editForm.author_role}
+                              onChange={(e) => setEditForm((p) => ({ ...p, author_role: e.target.value }))}
+                              disabled={savingEdit}
+                              style={ui.input}
+                            />
+                          </label>
+
+                          <label style={ui.label}>
+                            <div style={{ fontSize: 14, ...ui.muted }}>Quote</div>
+                            <textarea
+                              rows={4}
+                              value={editForm.quote}
+                              onChange={(e) => setEditForm((p) => ({ ...p, quote: e.target.value }))}
+                              disabled={savingEdit}
+                              style={ui.textarea}
+                            />
+                          </label>
+
+                          <div style={ui.btnRow}>
+                            <button type="button" onClick={onSaveEdit} disabled={savingEdit} style={ui.btnPrimary}>
+                              {savingEdit ? "Saving..." : "Save"}
+                            </button>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          ) : null}
+        </section>
+      </div>
     </div>
   );
 }
