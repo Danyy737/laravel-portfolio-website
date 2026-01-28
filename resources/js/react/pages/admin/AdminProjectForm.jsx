@@ -2,11 +2,13 @@ import React from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { apiGet } from "../../api/client";
 import { adminCreateProject, adminUpdateProject } from "../../api/adminProjects";
+import { useToast } from "../../components/ToastProvider.jsx";
 
 export default function AdminProjectForm() {
   const { id } = useParams(); // undefined for "new"
   const isEdit = Boolean(id);
   const nav = useNavigate();
+  const toast = useToast();
 
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
@@ -30,31 +32,39 @@ export default function AdminProjectForm() {
         setTitle(p?.title ?? "");
         setDescription(p?.description ?? "");
       })
-      .catch((e) => alive && setError(e?.message || "Failed to load project."))
+      .catch((e) => {
+        if (!alive) return;
+        const msg = e?.message || "Failed to load project.";
+        setError(msg);
+        toast.error(msg);
+      })
       .finally(() => alive && setLoading(false));
 
     return () => {
       alive = false;
     };
-  }, [id, isEdit]);
+  }, [id, isEdit, toast]);
 
   async function onSubmit(e) {
     e.preventDefault();
     setError("");
     setSaving(true);
 
-    // IMPORTANT: payload keys must match your Laravel Project fillable/validation
     const payload = { title, description };
 
     try {
       if (isEdit) {
         await adminUpdateProject(id, payload);
+        toast.success("Project updated.");
       } else {
         await adminCreateProject(payload);
+        toast.success("Project created.");
       }
       nav("/admin/projects", { replace: true });
     } catch (e2) {
-      setError(e2?.message || "Save failed.");
+      const msg = e2?.message || "Save failed.";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setSaving(false);
     }
@@ -67,13 +77,10 @@ export default function AdminProjectForm() {
       </p>
 
       {isEdit && (
-  <p style={{ marginTop: 4 }}>
-    <Link to={`/admin/projects/${id}/testimonials`}>
-      Manage Testimonials →
-    </Link>
-  </p>
-)}
-
+        <p style={{ marginTop: 4 }}>
+          <Link to={`/admin/projects/${id}/testimonials`}>Manage Testimonials →</Link>
+        </p>
+      )}
 
       <h1 style={{ marginBottom: 8 }}>{isEdit ? "Edit Project" : "New Project"}</h1>
 
@@ -94,6 +101,7 @@ export default function AdminProjectForm() {
               onChange={(e) => setTitle(e.target.value)}
               required
               style={{ width: "100%", padding: 10 }}
+              disabled={saving}
             />
           </label>
 
@@ -104,6 +112,7 @@ export default function AdminProjectForm() {
               onChange={(e) => setDescription(e.target.value)}
               rows={6}
               style={{ width: "100%", padding: 10 }}
+              disabled={saving}
             />
           </label>
 

@@ -2,8 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { getProjects } from "../../api/projects";
 import { adminDeleteProject } from "../../api/adminProjects";
+import { useToast } from "../../components/ToastProvider.jsx";
 
 export default function AdminProjectsIndex() {
+  const toast = useToast();
+
   const [data, setData] = React.useState(null);
   const [error, setError] = React.useState("");
   const [loading, setLoading] = React.useState(false);
@@ -16,7 +19,9 @@ export default function AdminProjectsIndex() {
       const json = await getProjects({ page, perPage: 10 });
       setData(json);
     } catch (e) {
-      setError(e?.message || "Failed to load projects.");
+      const msg = e?.message || "Failed to load projects.";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -33,15 +38,18 @@ export default function AdminProjectsIndex() {
   const lastPage = meta?.last_page ?? currentPage;
 
   async function onDelete(id) {
-    const ok = confirm("Delete this project? This cannot be undone.");
+    const ok = window.confirm("Delete this project? This cannot be undone.");
     if (!ok) return;
 
     setError("");
     try {
       await adminDeleteProject(id);
+      toast.success("Project deleted.");
       await load();
     } catch (e) {
-      setError(e?.message || "Delete failed.");
+      const msg = e?.message || "Delete failed.";
+      setError(msg);
+      toast.error(msg);
     }
   }
 
@@ -53,7 +61,15 @@ export default function AdminProjectsIndex() {
       </div>
 
       {error && (
-        <div style={{ padding: 12, border: "1px solid #f5c2c7", background: "#f8d7da", borderRadius: 10, marginTop: 12 }}>
+        <div
+          style={{
+            padding: 12,
+            border: "1px solid #f5c2c7",
+            background: "#f8d7da",
+            borderRadius: 10,
+            marginTop: 12,
+          }}
+        >
           {error}
         </div>
       )}
@@ -73,9 +89,7 @@ export default function AdminProjectsIndex() {
           <tbody>
             {projects.map((p) => (
               <tr key={p.id}>
-                <td style={{ borderBottom: "1px solid #eee", padding: 8 }}>
-                  {p.title ?? `Project #${p.id}`}
-                </td>
+                <td style={{ borderBottom: "1px solid #eee", padding: 8 }}>{p.title ?? `Project #${p.id}`}</td>
                 <td style={{ borderBottom: "1px solid #eee", padding: 8, display: "flex", gap: 10 }}>
                   <Link to={`/projects/${p.id}`}>View</Link>
                   <Link to={`/admin/projects/${p.id}/edit`}>Edit</Link>
