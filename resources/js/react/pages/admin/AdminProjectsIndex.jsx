@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getProjects } from "../../api/projects";
 import { adminDeleteProject } from "../../api/adminProjects";
 import { useToast } from "../../components/ToastProvider.jsx";
+import { ui } from "../../reactStyles.js";
 
 export default function AdminProjectsIndex() {
   const toast = useToast();
@@ -54,64 +55,56 @@ export default function AdminProjectsIndex() {
   }
 
   return (
-    <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+    <div style={ui.page}>
+      <div style={ui.headerRow}>
         <h1 style={{ margin: 0 }}>Admin Projects</h1>
-        <Link to="/admin/projects/new">+ New Project</Link>
+        <Link to="/admin/projects/new" style={ui.pillLink}>+ New Project</Link>
       </div>
 
-      {error && (
-        <div
-          style={{
-            padding: 12,
-            border: "1px solid #f5c2c7",
-            background: "#f8d7da",
-            borderRadius: 10,
-            marginTop: 12,
-          }}
-        >
-          {error}
-        </div>
-      )}
+      {error && <div style={ui.error}>{error}</div>}
 
       {loading && <p style={{ marginTop: 12 }}>Loading…</p>}
 
-      {!loading && projects.length === 0 && <p style={{ marginTop: 12 }}>No projects found.</p>}
+      {!loading && projects.length === 0 && <p style={{ marginTop: 12, ...ui.muted }}>No projects found.</p>}
 
       {projects.length > 0 && (
-        <table style={{ width: "100%", marginTop: 12, borderCollapse: "collapse" }}>
-          <thead>
-            <tr>
-              <th style={{ textAlign: "left", borderBottom: "1px solid #ddd", padding: 8 }}>Title</th>
-              <th style={{ textAlign: "left", borderBottom: "1px solid #ddd", padding: 8 }}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {projects.map((p) => (
-              <tr key={p.id}>
-                <td style={{ borderBottom: "1px solid #eee", padding: 8 }}>{p.title ?? `Project #${p.id}`}</td>
-                <td style={{ borderBottom: "1px solid #eee", padding: 8, display: "flex", gap: 10 }}>
-                  <Link to={`/projects/${p.id}`}>View</Link>
-                  <Link to={`/admin/projects/${p.id}/edit`}>Edit</Link>
-                  <button onClick={() => onDelete(p.id)}>Delete</button>
-                </td>
+        <div style={{ ...ui.card, marginTop: 12 }}>
+          <table style={ui.table}>
+            <thead>
+              <tr>
+                <th style={ui.th}>Title</th>
+                <th style={ui.th}>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+            </thead>
+            <tbody>
+              {projects.map((p) => (
+                <tr key={p.id}>
+                  <td style={ui.td}>{p.title ?? `Project #${p.id}`}</td>
+                  <td style={{ ...ui.td }}>
+                    <div style={ui.btnRow}>
+                      <Link to={`/projects/${p.id}`} style={ui.pillLink}>View</Link>
+                      <Link to={`/admin/projects/${p.id}/edit`} style={ui.pillLink}>Edit</Link>
+                      <button onClick={() => onDelete(p.id)} style={ui.btnDanger}>Delete</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
-      {meta && (
-        <div style={{ display: "flex", gap: 10, marginTop: 14, alignItems: "center" }}>
-          <button disabled={currentPage <= 1} onClick={() => setPage((x) => Math.max(1, x - 1))}>
-            Prev
-          </button>
-          <span>
-            Page {currentPage} of {lastPage}
-          </span>
-          <button disabled={currentPage >= lastPage} onClick={() => setPage((x) => x + 1)}>
-            Next
-          </button>
+          {meta && (
+            <div style={{ ...ui.btnRow, justifyContent: "space-between", marginTop: 12 }}>
+              <button style={ui.btn} disabled={currentPage <= 1} onClick={() => setPage((x) => Math.max(1, x - 1))}>
+                Prev
+              </button>
+              <span style={ui.muted}>
+                Page {currentPage} of {lastPage}
+              </span>
+              <button style={ui.btn} disabled={currentPage >= lastPage} onClick={() => setPage((x) => x + 1)}>
+                Next
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
