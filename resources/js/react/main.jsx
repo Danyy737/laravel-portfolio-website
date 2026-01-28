@@ -13,6 +13,8 @@ import RequireAdminAuth from "./components/admin/RequireAdminAuth.jsx";
 import AdminLogin from "./pages/admin/AdminLogin.jsx";
 import AdminProjectsIndex from "./pages/admin/AdminProjectsIndex.jsx";
 import AdminProjectForm from "./pages/admin/AdminProjectForm.jsx";
+import AdminTestimonialsPage from "./pages/admin/AdminTestimonialsPage.jsx";
+
 
 function App() {
   return (
@@ -68,6 +70,18 @@ function App() {
             </Layout>
           }
         />
+
+        <Route
+  path="/admin/projects/:projectId/testimonials"
+  element={
+    <Layout>
+      <RequireAdminAuth>
+        <AdminTestimonialsPage />
+      </RequireAdminAuth>
+    </Layout>
+  }
+/>
+
 
         <Route path="*" element={<Layout><div>Not found</div></Layout>} />
       </Routes>

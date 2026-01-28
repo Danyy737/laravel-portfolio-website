@@ -66,6 +66,15 @@ export default function AdminProjectForm() {
         <Link to="/admin/projects">← Back to admin projects</Link>
       </p>
 
+      {isEdit && (
+  <p style={{ marginTop: 4 }}>
+    <Link to={`/admin/projects/${id}/testimonials`}>
+      Manage Testimonials →
+    </Link>
+  </p>
+)}
+
+
       <h1 style={{ marginBottom: 8 }}>{isEdit ? "Edit Project" : "New Project"}</h1>
 
       {error && (
