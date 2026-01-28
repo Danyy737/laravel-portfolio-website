@@ -15,10 +15,12 @@ export async function adminFetch(path, options = {}) {
   });
 
   // If token is invalid/expired, force logout
-  if (res.status === 401) {
-    clearAdminToken();
-    throw new Error("Session expired. Please log in again.");
-  }
+if (res.status === 401) {
+  clearAdminToken();
+  window.location.href = "/react/admin/login";
+  throw new Error("Session expired. Please log in again.");
+}
+
 
   if (!res.ok) {
     const text = await res.text();
