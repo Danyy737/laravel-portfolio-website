@@ -1,22 +1,23 @@
 # Laravel Portfolio Website (Headless / API-First)
 
-A **headless, API-first Laravel application** featuring a Blade reference frontend, a Sanctum-secured admin API, and a public read-only JSON API designed for multiple consumers.
+A **headless, API-first Laravel application** featuring a Blade reference frontend, a **Sanctum-secured admin API**, and a **React SPA admin dashboard** consuming the same backend APIs.
 
-The project is structured with clean validation, middleware-based authorization, and a decoupled architecture that allows new frontends (SPA or mobile) to be added without rewriting backend logic.
+The project is structured with clean validation, middleware-based authorization, and a decoupled architecture that allows new frontends (SPA or mobile) to be added **without rewriting backend logic**.
 
 ---
 
 ## Overview
 
-This project began as a personal portfolio website and evolved into a **production-style Laravel backend** with multiple consumers.
+This project began as a personal portfolio website and evolved into a **production-style API-first Laravel backend** with multiple consumers.
 
 The application exposes:
 - A **public, read-only JSON API**
 - A **Sanctum-protected admin API** for full CRUD operations
-- A **Blade-based reference UI** that consumes the same database and models
+- A **Blade-based reference frontend**
+- A **React SPA admin dashboard** with token-based authentication
 
-Blade is treated as **one frontend client**, not the core of the system.  
-All business logic, validation, and authorization live in the backend.
+Blade and React are treated as **clients**, not the core of the system.  
+All business logic, validation, and authorization live exclusively in the backend.
 
 ---
 
@@ -24,14 +25,16 @@ All business logic, validation, and authorization live in the backend.
 
 This project follows a **headless / API-first architecture**.
 
-- Backend logic is centralized in Laravel
-- Multiple frontends can consume the same APIs
-- No business logic is duplicated between clients
+- Backend logic centralized in Laravel
+- Public and admin APIs clearly separated
+- Multiple frontends consume the same models and database
+- No business logic duplicated between clients
 
-Current consumers:
-- **Blade UI** (server-rendered reference frontend)
-- **Postman** (API testing)
-- **Future React SPA** (planned)
+### Current Consumers
+- **Blade UI** – server-rendered reference frontend  
+- **React SPA** – public project browsing  
+- **React Admin Dashboard** – authenticated CMS  
+- **Postman** – API testing  
 
 ---
 
@@ -44,11 +47,25 @@ Current consumers:
 - Friendly feedback instead of hard 429 errors
 - Old input preserved on validation errors
 
-> The Blade UI reflects database and API changes automatically and exists primarily as a reference frontend.
+> Blade exists primarily as a reference frontend and mirrors API and database changes automatically.
 
 ---
 
-## Screenshots
+### React Admin Dashboard (SPA)
+
+- Token-based login using **Laravel Sanctum**
+- Protected routes using client-side guards
+- Full CRUD for:
+  - Projects
+  - Testimonials
+- Public read / admin write separation
+- Auto-logout on expired tokens (401 handling)
+- Toast notifications for success and error feedback
+- Dark mode toggle with persistent theme selection
+
+---
+
+## Screenshots — Blade Reference UI
 
 ### Public Portfolio
 ![Projects Page](screenshots/projectspage.png)
@@ -59,9 +76,23 @@ Current consumers:
 ### Admin – Testimonials CMS
 ![Admin Testimonials](screenshots/adminpaneltestimonials.png)
 
+## Screenshots — React SPA
+
+### React – Admin Projects Index
+![Home Projects](screenshots/reactprojectshome.png)
+
+### React - Project Editing
+![Admin Project Editing](screenshots/reacteditprojects.png)
+
+### React – Edit Testimonials CMS
+![Admin Testimonials Editing](screenshots/reactmanagetest.png)
+
+---
+
 ## Authentication & Admin Access
 
 - Authentication implemented using **Laravel Breeze**
+- Token-based authentication using **Laravel Sanctum**
 - Admin access enforced via custom middleware (`EnsureAdmin`)
 - Admin access rules:
   - Allowlisted email address, or
@@ -86,6 +117,7 @@ The application exposes a **public JSON API** intended for frontend clients such
 - Responses formatted using **Laravel API Resources**
 - Clean timestamp formatting
 
+---
 
 ## Admin API (Sanctum-Protected)
 
@@ -94,7 +126,7 @@ All write operations are exposed **exclusively via authenticated API endpoints**
 ### Authentication
 - Token-based authentication using **Laravel Sanctum**
 - Tokens issued and revoked via API endpoints
-- Tokens tested using Postman
+- Tokens tested using Postman and React SPA
 
 ### Admin CRUD APIs
 - Projects: create, update, delete
@@ -115,31 +147,25 @@ All write operations are exposed **exclusively via authenticated API endpoints**
 ---
 
 ## Project Structure (Simplified)
+
 ```bash
 app/
-- Http/
-  - Controllers/
-    - Admin/
-    - Api/
-  - Middleware/
-  - Requests/
-  - Resources/
-- Models/
+├── Http/
+│   ├── Controllers/
+│   │   ├── Admin/
+│   │   └── Api/
+│   ├── Middleware/
+│   ├── Requests/
+│   └── Resources/
+├── Models/
 routes/
-- web.php
-- api.php
+├── web.php
+├── api.php
 resources/
-- views/
+├── views/
+├── js/
+│   └── react/
 ```
-## Roadmap
-
-- Public read-only API (done)
-- Sanctum-protected admin API (done)
-- Blade reference frontend (done)
-- React SPA consuming public APIs
-- React admin dashboard using Sanctum tokens
-- API documentation (OpenAPI / Swagger)
-- API response caching
 
 ---
 
@@ -155,25 +181,23 @@ php artisan serve
 ```
 Visit http://127.0.0.1:8000 to view the application.
 
+
 ## Purpose of This Project
 
 This project demonstrates:
 - Headless / API-first Laravel architecture
-
-- Secure token-based authentication
-
+- Secure token-based authentication using Sanctum
 - Clean validation and authorization patterns
-
 - Practical API design for real frontend consumers
+- SPA admin dashboard consuming backend APIs
+- Scalable backend structure suitable for future clients
 
-- Scalable backend structure suitable for SPAs
-
-It is intentionally built beyond a basic CRUD application to reflect real backend development practices.
+It is intentionally built beyond a basic CRUD application to reflect real backend and full-stack development practices.
 
 ## Author
 
 Daniel Mourad  
-Built for learning, experimentation, and growth as a backend developer.
+Full-stack developer with a backend-first focus.
 
 
 
